@@ -211,7 +211,6 @@ func (s *Service) runRepoOperation(
 			}
 		}
 		_, err = checkoutRevision(gitClient, revision, log.WithField("repo", repo.Repo))
-		fmt.Println("Checked out")
 		if err != nil {
 			return nil, err
 		}
@@ -241,20 +240,6 @@ func (s *Service) GenerateManifest(ctx context.Context, q *apiclient.ManifestReq
 	if result != nil && !ok {
 		return nil, errors.New("unexpected result type")
 	}
-//<<<<<<< HEAD
-//	err := s.runRepoOperation(ctx, q.Revision, q.Repo, q.ApplicationSource, q.VerifySignature, getCached, func(appPath, repoRoot, revision, verifyResult string) error {
-//		var err error
-//		res, err = GenerateManifests(appPath, repoRoot, correctRevisionSHA(q.Revision), q, false)
-//		if err != nil {
-//			return err
-//		}
-//		res.Revision = correctRevisionSHA(revision)
-//		res.VerifyResult = verifyResult
-//		err = s.cache.SetManifests(revision, q.ApplicationSource, q.Namespace, q.AppLabelKey, q.AppLabelValue, &res)
-//		if err != nil {
-//			log.Warnf("manifest cache set error %s/%s: %v", q.ApplicationSource.String(), revision, err)
-//=======
-
 	return result, err
 }
 
