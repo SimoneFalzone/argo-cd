@@ -295,7 +295,7 @@ func (s *Service) runManifestGen(appPath, repoRoot, revision, verifyResult strin
 	manifestGenResult.VerifyResult = verifyResult
 	err = s.cache.SetManifests(revision, q.ApplicationSource, q.Namespace, q.AppLabelKey, q.AppLabelValue, &manifestGenCacheEntry)
 	if err != nil {
-		log.Warnf("manifest cache set error %s/%s: %v", q.ApplicationSource.String(), correctedRevision, err)
+		log.Warnf("manifest cache set error %s/%s: %v", q.ApplicationSource.String(), revision, err)
 	}
 	return manifestGenCacheEntry.ManifestResponse, nil
 }
