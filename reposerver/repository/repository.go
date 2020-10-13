@@ -274,7 +274,7 @@ func (s *Service) runManifestGen(appPath, repoRoot, revision, verifyResult strin
 			// Retrieve a new copy (if available) of the cached response: this ensures we are updating the latest copy of the cache,
 			// rather than a copy of the cache that occurred before (a potentially lengthy) manifest generation.
 			innerRes := &cache.CachedManifestResponse{}
-			cacheErr := s.cache.GetManifests(correctedRevision, q.ApplicationSource, q.Namespace, q.AppLabelKey, q.AppLabelValue, innerRes)
+			cacheErr := s.cache.GetManifests(revision, q.ApplicationSource, q.Namespace, q.AppLabelKey, q.AppLabelValue, innerRes)
 			if cacheErr != nil && cacheErr != reposervercache.ErrCacheMiss {
 				log.Warnf("manifest cache set error %s: %v", q.ApplicationSource.String(), cacheErr)
 				return nil, cacheErr
@@ -289,7 +289,7 @@ func (s *Service) runManifestGen(appPath, repoRoot, revision, verifyResult strin
 			// Update the cache to include failure information
 			innerRes.NumberOfConsecutiveFailures++
 			innerRes.MostRecentError = err.Error()
-			cacheErr = s.cache.SetManifests(correctedRevision, q.ApplicationSource, q.Namespace, q.AppLabelKey, q.AppLabelValue, innerRes)
+			cacheErr = s.cache.SetManifests(revision, q.ApplicationSource, q.Namespace, q.AppLabelKey, q.AppLabelValue, innerRes)
 			if cacheErr != nil {
 				log.Warnf("manifest cache set error %s: %v", q.ApplicationSource.String(), cacheErr)
 				return nil, cacheErr
@@ -306,9 +306,9 @@ func (s *Service) runManifestGen(appPath, repoRoot, revision, verifyResult strin
 		FirstFailureTimestamp:           0,
 		MostRecentError:                 "",
 	}
-	manifestGenResult.Revision = revision
+	manifestGenResult.Revision = correctedRevision
 	manifestGenResult.VerifyResult = verifyResult
-	err = s.cache.SetManifests(correctedRevision, q.ApplicationSource, q.Namespace, q.AppLabelKey, q.AppLabelValue, &manifestGenCacheEntry)
+	err = s.cache.SetManifests(revision, q.ApplicationSource, q.Namespace, q.AppLabelKey, q.AppLabelValue, &manifestGenCacheEntry)
 	if err != nil {
 		log.Warnf("manifest cache set error %s/%s: %v", q.ApplicationSource.String(), correctedRevision, err)
 	}
